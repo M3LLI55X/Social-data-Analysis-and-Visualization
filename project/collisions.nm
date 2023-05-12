@@ -1,0 +1,44 @@
+mdp
+
+const begin=0;
+const Borough_Bronx=1;
+const Borough_Brook=2;
+const Borough_Manha=3;
+const Borough_Queens=4;
+const Borough_Staten=5;
+const no_injured=6;
+const injured=7;
+const killed=8;
+const focus_time=9;
+const other_time=10;
+const end=11;
+const n;
+
+module collisions
+
+state : [begin..end] init begin;
+
+[] (state = begin) -> 0.147:(state' = Borough_Bronx)
+                    + 0.316:(state' = Borough_Brook) + 0.227:(state' = Borough_Manha)
+                    + 0.268:(state' = Borough_Queens) + 0.042:(state' = Borough_Staten);
+
+[] (state = Borough_Bronx) ->0.770:(state' = no_injured)
+                    + 0.229:(state' = injured) + 0.001:(state' = killed);
+[] (state = Borough_Brook) ->0.763:(state' = no_injured)
+                    + 0.236:(state' = injured) + 0.001:(state' = killed);
+[] (state = Borough_Manha) ->0.833:(state' = no_injured)
+                    + 0.166:(state' = injured) + 0.001:(state' = killed);
+[] (state = Borough_Queens) ->0.785:(state' = no_injured)
+                    + 0.214:(state' = injured) + 0.001:(state' = killed);
+[] (state = Borough_Staten) ->0.800:(state' = no_injured)
+                    + 0.198:(state' = injured) + 0.002:(state' = killed);
+
+[] (state = no_injured) ->0.337:(state' = focus_time) + 0.663:(state' = other_time);
+[] (state = injured) ->0.339:(state' = focus_time) + 0.661:(state' = other_time);
+[] (state = killed) ->0.255:(state' = focus_time) + 0.745:(state' = other_time);
+
+[] (state = focus_time) -> 1:(state' = end);
+[] (state = other_time) -> 1:(state' = end);
+[] (state = end) -> 1:(state' = begin);
+
+endmodule
